@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- viewport-fit=cover: draw under the iPhone notch/home indicator; insets via safe-area-context -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>%WEB_TITLE%</title>
+    <meta name="description" content="Plan, compare and track annuity loans. All data stays on your device." />
+
+    <!-- PWA / iOS home screen (README §4.11, Q9). __BASE__/ is replaced with the base path by scripts/postexport-web.mjs. -->
+    <link rel="manifest" href="__BASE__/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Loan Planner" />
+    <link rel="apple-touch-icon" href="__BASE__/icons/apple-touch-icon-180.png" />
+    <link rel="icon" type="image/svg+xml" href="__BASE__/favicon.svg" />
+    <!-- theme-color = palette `bg` (§6.15); the app updates the active tag at runtime -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F5F7FA" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E141B" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        overflow: hidden;
+        background-color: #f5f7fa;
+        /* No rubber-band bounce / pull-to-refresh in the standalone PWA */
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-text-size-adjust: 100%;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #0e141b;
+        }
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript> You need to enable JavaScript to run this app. </noscript>
+    <div id="root"></div>
+    <!-- scripts/postexport-web.mjs injects the service worker registration into the exported build -->
+  </body>
+</html>

@@ -1,0 +1,126 @@
+{
+  "app": { "name": "Annuity Loan Planner" },
+  "tabs": { "loans": "Darlehen", "settings": "Einstellungen" },
+  "common": {
+    "save": "Speichern", "cancel": "Abbrechen", "close": "Schließen", "delete": "Löschen", "edit": "Bearbeiten", "apply": "Übernehmen",
+    "back": "Zurück", "more": "Weitere Aktionen", "undo": "Rückgängig", "copy": "Kopieren", "copied": "Kopiert", "confirm": "Bestätigen",
+    "yes": "Ja", "no": "Nein", "open": "offen", "estimate": "Schätzung", "months": "{{count}} Mon.", "years": "Jahre",
+    "ok": "OK", "loading": "Wird geladen…", "optional": "optional"
+  },
+  "status": { "offer": "Angebot", "active": "Aktiv", "closed": "Abgeschlossen" },
+  "overview": {
+    "title": "Darlehen", "new": "Neues Darlehen", "sort": "Sortierung", "filter": "Filter", "toggleDirection": "Sortierrichtung umkehren",
+    "ascending": "aufsteigend", "descending": "absteigend",
+    "filters": { "all": "Alle", "offer": "Angebote", "active": "Aktiv", "closed": "Abgeschlossen" },
+    "sortKeys": {
+      "rate": "Niedrigster Sollzins", "payoffDate": "Früheste Tilgung", "totalInterest": "Geringste Zinsen gesamt",
+      "balanceAtFixedEnd": "Geringste Restschuld nach Zinsbindung", "payment": "Niedrigste Rate", "monthlyOutlay": "Geringste Monatsbelastung"
+    },
+    "payment": "Rate {{amount}}", "paymentPlusSpecial": "Rate {{amount}} + {{special}}",
+    "fixedEnd": "Zinsbindungsende {{date}}:", "paidOff": "Getilgt {{date}}", "paidOffEst": "Getilgt {{date}} (Schätzung)",
+    "totalInterest": "Zinsen gesamt {{amount}}", "outlay": "Monatsbelastung {{amount}}",
+    "emptyTitle": "Plane dein erstes Darlehen", "emptyText": "Gib ein Angebot ein und sieh den Tilgungsplan, die Restschuld nach der Zinsbindung und das Tilgungsende.",
+    "create": "Darlehen anlegen", "noneForFilter": "Keine Darlehen für diesen Filter.", "selectHint": "Wähle ein Darlehen, um die Details zu sehen.",
+    "deleted": "„{{name}}“ gelöscht", "duplicate": "Duplizieren"
+  },
+  "edit": {
+    "titleNew": "Neues Darlehen", "titleEdit": "Darlehen bearbeiten", "name": "Name", "namePlaceholder": "z. B. DummyBank 10 J.", "lender": "Bank",
+    "notes": "Notizen",
+    "sectionLoan": "Darlehen", "principal": "Darlehensbetrag", "deriveHelper": "Aus Kaufpreis & Eigenkapital ableiten", "rate": "Sollzins p. a.",
+    "fixedPeriod": "Zinsbindung", "custom": "Andere", "fixedMonths": "Zinsbindung in Monaten", "payoutDate": "Auszahlung", "firstPayment": "Erste Rate",
+    "sectionPayment": "Monatliche Rate",
+    "modes": { "initialRepayment": "Anf. Tilgung", "term": "Laufzeit", "fixedAmount": "Betrag" },
+    "initialRepayment": "Anfängliche Tilgung p. a.", "termYears": "Laufzeit", "amount": "Ratenbetrag",
+    "paymentResult": "Rate", "hintRepayment": "≙ anfängliche Tilgung {{rate}}", "hintTerm": "≙ Laufzeit {{years}} J. {{months}} Mon. ohne Sondertilgungen",
+    "sectionSpecial": "Sondertilgungen", "addRule": "Regel hinzufügen", "removeRule": "Regel entfernen", "monthly": "Monatlich", "yearly": "Jährlich",
+    "ruleMonth": "Monat", "ruleAmount": "Betrag", "ruleStart": "Ab", "ruleEnd": "Bis", "ruleEndOpen": "offen",
+    "sectionFollowUp": "Nach der Zinsbindung (Schätzung)", "assumedRate": "Angenommener Zins", "keepPayment": "Rate beibehalten",
+    "repaymentRate": "Tilgungssatz", "keepSpecialRules": "Sondertilgungsregeln fortführen",
+    "advanced": "Erweitert", "rounding": "Rundung", "roundingBank": "Bank (auf den Cent)", "roundingSpreadsheet": "Tabelle (ohne Zwischenrundung)",
+    "preview": "Getilgt {{payoff}} · Restschuld {{balance}} · Zinsen {{interest}}",
+    "previewInvalid": "Vervollständige die markierten Felder, um die Prognose zu sehen.",
+    "contractLocked": "Vertragsdaten sind bei aktiven Darlehen gesperrt.", "unlockContract": "Vertragsdaten bearbeiten",
+    "unlockTitle": "Vertragsdaten bearbeiten?", "unlockText": "Beim Speichern geänderter Vertragsdaten wird der ursprüngliche Plan ersetzt. Korrekturen bleiben erhalten.",
+    "discardTitle": "Änderungen verwerfen?", "discardText": "Deine Änderungen an diesem Darlehen gehen verloren.", "discard": "Verwerfen"
+  },
+  "helper": { "title": "Darlehensbetrag ableiten", "purchasePrice": "Kaufpreis", "incidentalCosts": "Kaufnebenkosten", "incidentalHint": "Grunderwerbsteuer, Notar, Makler", "equity": "Eigenkapital", "result": "Darlehensbetrag" },
+  "detail": {
+    "thisMonth": "Dieser Monat · {{date}}", "firstPayment": "Erste Rate · {{date}}", "payment": "Rate", "interest": "Zinsen", "principal": "Tilgung",
+    "special": "Sondertilgung", "balanceAfter": "Restschuld danach", "copyValues": "Werte kopieren",
+    "fixedEnd": "Ende der Zinsbindung · {{date}}", "remaining": "Restschuld", "paidOffBefore": "Vor Ende getilgt: {{date}}",
+    "interestPaid": "Gezahlte Zinsen", "principalPaid": "Getilgt", "specialPaid": "Sondertilgungen", "paymentsMade": "Gezahlte Raten",
+    "payoff": "Tilgungsende", "payoffDate": "Getilgt am", "payments": "Raten", "totalInterest": "Zinsen gesamt", "totalSpecial": "Sondertilgungen gesamt",
+    "estimateNote": "* Schätzung nach der Zinsbindung bei angenommenen {{rate}} Zinsen.",
+    "vsPlan": "vs. ursprünglicher Plan", "deltaPayoff": "Tilgungsende", "deltaInterest": "Zinsen", "deltaBalance": "Restschuld nach Zinsbindung",
+    "balanceChart": "Restschuld", "schedule": "Tilgungsplan", "toConfirm_one": "{{count}} Sondertilgung zu bestätigen", "toConfirm_other": "{{count}} Sondertilgungen zu bestätigen",
+    "paidOffBanner": "Dieses Darlehen wurde am {{date}} getilgt.", "markClosed": "Als abgeschlossen markieren", "paidOff": "Getilgt {{date}}",
+    "keyFigures": "Kennzahlen", "annuity": "Monatliche Rate", "outlay": "Monatsbelastung", "equivRepayment": "Anfängliche Tilgung"
+  },
+  "menu": {
+    "newLoan": "Neues Darlehen…", "edit": "Bearbeiten", "duplicate": "Duplizieren", "activate": "Als aktiv markieren", "revert": "Zurück zum Angebot",
+    "close": "Als abgeschlossen markieren", "reopen": "Wieder öffnen", "rebaseline": "Plan neu festlegen", "delete": "Löschen"
+  },
+  "lifecycle": {
+    "activateTitle": "Als aktiv markieren?", "activateText": "Die aktuellen Parameter und Sondertilgungsregeln werden als ursprünglicher Plan eingefroren.",
+    "revertTitle": "Zurück zum Angebot?", "revertText": "Der ursprüngliche Plan wird verworfen. Korrekturen bleiben erhalten.",
+    "closeTitle": "Als abgeschlossen markieren?", "closeText": "Abgeschlossene Darlehen sind schreibgeschützt und erhalten keine Benachrichtigungen.",
+    "reopenTitle": "Darlehen wieder öffnen?", "reopenText": "Das Darlehen wird wieder aktiv, einschließlich seines ursprünglichen Plans.",
+    "rebaselineTitle": "Plan neu festlegen?", "rebaselineText": "Der ursprüngliche Plan wird durch die aktuellen Parameter und Regeln ersetzt. Korrekturen bleiben erhalten.",
+    "deleteTitle": "„{{name}}“ löschen?", "deleteText": "Du kannst das einige Sekunden lang rückgängig machen."
+  },
+  "schedule": {
+    "title": "Tilgungsplan", "monthly": "Monatlich", "yearly": "Jährlich", "projection": "Prognose",
+    "projections": { "current": "Aktuell", "withoutSpecial": "Ohne Sondertilgungen", "originalPlan": "Ursprünglicher Plan" },
+    "cols": { "n": "Nr", "date": "Datum", "year": "Jahr", "opening": "Anfang", "payment": "Rate", "interest": "Zinsen", "principal": "Tilgung", "special": "Sondert.", "closing": "Restschuld", "payments": "Raten" },
+    "today": "heute", "fixedEnd": "Zinsbindungsende {{date}}", "paidOffBeforeEnd": "Vor Ende der Zinsbindung getilgt",
+    "legend": "✓ bestätigt · ○ vergangen, unbestätigt · ✎ korrigiert · * Schätzung",
+    "jump": "Springe zu", "jumpToday": "Heute", "jumpFixedEnd": "Zinsbindungsende", "jumpPayoff": "Tilgungsende",
+    "rowTitle": "Rate {{n}} · {{date}}", "confirmAsPlanned": "Wie geplant bestätigen", "status": "Status Sondertilgung",
+    "statuses": { "none": "–", "planned": "geplant", "confirmed": "bestätigt", "unconfirmed": "unbestätigt" },
+    "phase": "Phase", "phases": { "fixed": "Zinsbindung", "followUp": "Anschluss (Schätzung)", "full": "Gesamtes Jahr" },
+    "actual": "Ist", "noBaseline": "Der ursprüngliche Plan ist nur für aktive und abgeschlossene Darlehen verfügbar."
+  },
+  "settings": {
+    "title": "Einstellungen", "language": "Sprache", "languages": { "system": "System", "de": "Deutsch", "en": "English" },
+    "appearance": "Darstellung", "appearances": { "system": "System", "light": "Hell", "dark": "Dunkel" }, "theme": "Farbschema",
+    "notifications": "Benachrichtigungen", "notificationsWeb": "Benachrichtigungen gibt es in der iOS- und Android-App.",
+    "data": "Daten", "dataWeb": "Deine Daten werden nur in diesem Browser gespeichert. Export und Import der Sicherung folgen in einer späteren Version.",
+    "dataNative": "Deine Daten sind auf dieser Plattform automatisch in iCloud- bzw. Google-Backups enthalten.",
+    "about": "Über", "privacy": "Datenschutz: Keine Daten verlassen dein Gerät", "disclaimer": "Haftungsausschluss", "licenses": "Lizenzen", "version": "Version {{version}}",
+    "install": "Auf dem iPhone installieren: Teilen antippen, dann „Zum Home-Bildschirm“. Die App funktioniert dann auch offline."
+  },
+  "theme": { "title": "Farbschema", "preview": "Vorschau", "light": "hell", "dark": "dunkel", "button": "Schaltfläche", "inUse": "aktiv" },
+  "disclaimer": {
+    "title": "Bevor du startest", "text": "Nur Schätzungen, keine Finanzberatung. Verbindlich sind die Werte deiner Bank.", "accept": "Verstanden"
+  },
+  "licenses": {
+    "text": "Farbpaletten: Solarized (Ethan Schoonover), Nord (Arctic Ice Studio), Gruvbox (Pavel Pertsev), Catppuccin – alle MIT-lizenziert. Icons: Ionicons (MIT). Bibliotheken: Expo, React Native, decimal.js-light, i18next, Zustand, idb (MIT)."
+  },
+  "a11y": { "amount": "{{label}} {{value}}" },
+  "err": {
+    "name": { "required": "Bitte gib einen Namen ein.", "length": "Höchstens {{max}} Zeichen." },
+    "principal": { "range": "Zwischen 1.000 € und 10.000.000 €." },
+    "rate": { "range": "Zwischen 0 % und 20 %, höchstens 3 Nachkommastellen." },
+    "repayment": { "range": "Zwischen 0,5 % und 30 %." },
+    "term": { "range": "Zwischen 1 und 50 Jahren." },
+    "payment": { "belowInterest": "Die Rate muss höher sein als die Zinsen des ersten Monats." },
+    "fixed": { "range": "Zwischen 12 und 480 Monaten." },
+    "payout": { "required": "Bitte gib das Auszahlungsdatum ein." },
+    "firstPayment": { "range": "Am oder nach dem Auszahlungsdatum, höchstens 12 Monate später." },
+    "helper": { "negative": "Werte dürfen nicht negativ sein.", "equityTooHigh": "Das Eigenkapital muss kleiner sein als Kaufpreis plus Nebenkosten." },
+    "special": { "amount": "Der Betrag muss größer als 0 sein.", "endBeforeStart": "Das Ende darf nicht vor dem Beginn liegen.", "month": "Bitte wähle einen Monat." },
+    "override": { "amount": "Gib einen Betrag größer als 0 ein.", "duplicate": "Für dieses Datum gibt es bereits eine Korrektur." },
+    "followUp": { "rate": "Zwischen 0 % und 20 %.", "repayment": "Zwischen 0,5 % und 30 %.", "belowInterest": "Die Anschlussrate deckt die Zinsen nicht." },
+    "note": { "length": "Höchstens {{max}} Zeichen." },
+    "notify": { "days": "Zwischen 1 und 30 Tagen.", "months": "Bis zu 3 verschiedene Werte zwischen 1 und 36." },
+    "contract": { "locked": "Vertragsdaten sind gesperrt." },
+    "lifecycle": { "invalid": "Diese Aktion ist im aktuellen Status nicht möglich." },
+    "loan": { "notFound": "Darlehen nicht gefunden." },
+    "number": "Bitte gib eine Zahl ein."
+  },
+  "warn": {
+    "override": { "orphaned": "Eine Korrektur passt zu keinem Zahlungstermin mehr." },
+    "schedule": { "tooLong": "Das Darlehen wird nicht innerhalb von 50 Jahren getilgt." }
+  },
+  "months": { "1": "Januar", "2": "Februar", "3": "März", "4": "April", "5": "Mai", "6": "Juni", "7": "Juli", "8": "August", "9": "September", "10": "Oktober", "11": "November", "12": "Dezember" }
+}

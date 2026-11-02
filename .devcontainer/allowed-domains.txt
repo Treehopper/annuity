@@ -1,0 +1,29 @@
+# Outbound allowlist for init-firewall.sh, one domain per line.
+# Do not add GitHub or any other git host: the container may commit but not push.
+# This file is baked into the image: changes take effect after a rebuild.
+
+# npm registry
+registry.npmjs.org
+
+# Claude Code
+api.anthropic.com
+claude.ai
+platform.claude.com
+console.anthropic.com
+statsig.com
+sentry.io
+
+# Expo CLI (SDK version data for `expo start` / `expo install`) and EAS
+api.expo.dev
+exp.host
+expo.dev
+u.expo.dev
+
+# Playwright browser downloads
+cdn.playwright.dev
+playwright.download.prss.microsoft.com
+
+# VS Code extensions and server
+marketplace.visualstudio.com
+vscode.blob.core.windows.net
+update.code.visualstudio.com

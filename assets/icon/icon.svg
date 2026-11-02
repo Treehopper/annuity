@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- App icon placeholder: the universal currency sign ¤ (U+00A4), drawn as geometry so it
+       does not depend on an installed font (README §4.11). scripts/render-icons.mjs reads the
+       #glyph group and renders all PNG variants from it. -->
+  <rect id="background" width="1024" height="1024" fill="#1C6E8C"/>
+  <g id="glyph" fill="#F5F7FA" transform="translate(512 512) scale(0.95) translate(-512 -512)">
+    <!-- Ring: outer radius 252, inner radius 168 (even-odd fill) -->
+    <path fill-rule="evenodd" d="M512 260a252 252 0 1 0 0.001 0z M512 344a168 168 0 1 1 -0.001 0z"/>
+    <!-- Four diagonal stubs, 84 wide, from the ring outwards -->
+    <rect x="470" y="130" width="84" height="150" transform="rotate(45 512 512)"/>
+    <rect x="470" y="130" width="84" height="150" transform="rotate(135 512 512)"/>
+    <rect x="470" y="130" width="84" height="150" transform="rotate(225 512 512)"/>
+    <rect x="470" y="130" width="84" height="150" transform="rotate(315 512 512)"/>
+  </g>
+</svg>

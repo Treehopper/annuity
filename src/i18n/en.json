@@ -1,0 +1,126 @@
+{
+  "app": { "name": "Annuity Loan Planner" },
+  "tabs": { "loans": "Loans", "settings": "Settings" },
+  "common": {
+    "save": "Save", "cancel": "Cancel", "close": "Close", "delete": "Delete", "edit": "Edit", "apply": "Apply",
+    "back": "Back", "more": "More actions", "undo": "Undo", "copy": "Copy", "copied": "Copied", "confirm": "Confirm",
+    "yes": "Yes", "no": "No", "open": "open", "estimate": "estimate", "months": "{{count}} mo.", "years": "years",
+    "ok": "OK", "loading": "Loading…", "optional": "optional"
+  },
+  "status": { "offer": "Offer", "active": "Active", "closed": "Closed" },
+  "overview": {
+    "title": "Loans", "new": "New loan", "sort": "Sort", "filter": "Filter", "toggleDirection": "Toggle sort direction",
+    "ascending": "ascending", "descending": "descending",
+    "filters": { "all": "All", "offer": "Offers", "active": "Active", "closed": "Closed" },
+    "sortKeys": {
+      "rate": "Lowest interest rate", "payoffDate": "Earliest payoff", "totalInterest": "Lowest total interest",
+      "balanceAtFixedEnd": "Lowest balance at fixed-rate end", "payment": "Lowest payment", "monthlyOutlay": "Lowest monthly outlay"
+    },
+    "payment": "Payment {{amount}}", "paymentPlusSpecial": "Payment {{amount}} + {{special}}",
+    "fixedEnd": "Fixed-rate end {{date}}:", "paidOff": "Paid off {{date}}", "paidOffEst": "Paid off {{date}} (est.)",
+    "totalInterest": "Total interest {{amount}}", "outlay": "Monthly outlay {{amount}}",
+    "emptyTitle": "Plan your first loan", "emptyText": "Enter an offer to see its schedule, the balance at the end of the fixed-rate period and the payoff date.",
+    "create": "Create loan", "noneForFilter": "No loans match this filter.", "selectHint": "Select a loan to see its details.",
+    "deleted": "“{{name}}” deleted", "duplicate": "Duplicate"
+  },
+  "edit": {
+    "titleNew": "New loan", "titleEdit": "Edit loan", "name": "Name", "namePlaceholder": "e.g. DummyBank 10y", "lender": "Lender",
+    "notes": "Notes",
+    "sectionLoan": "Loan", "principal": "Loan amount", "deriveHelper": "Derive from price & equity", "rate": "Interest p.a.",
+    "fixedPeriod": "Fixed-rate period", "custom": "Custom", "fixedMonths": "Fixed-rate months", "payoutDate": "Payout date", "firstPayment": "First payment",
+    "sectionPayment": "Monthly payment",
+    "modes": { "initialRepayment": "Initial repayment", "term": "Term", "fixedAmount": "Amount" },
+    "initialRepayment": "Initial repayment p.a.", "termYears": "Term", "amount": "Payment amount",
+    "paymentResult": "Payment", "hintRepayment": "≙ initial repayment {{rate}}", "hintTerm": "≙ term {{years}} y {{months}} mo. without special repayments",
+    "sectionSpecial": "Special repayments", "addRule": "Add rule", "removeRule": "Remove rule", "monthly": "Monthly", "yearly": "Yearly",
+    "ruleMonth": "Month", "ruleAmount": "Amount", "ruleStart": "From", "ruleEnd": "Until", "ruleEndOpen": "open",
+    "sectionFollowUp": "After fixed-rate period (estimate)", "assumedRate": "Assumed rate", "keepPayment": "Keep payment",
+    "repaymentRate": "Repayment rate", "keepSpecialRules": "Continue special repayment rules",
+    "advanced": "Advanced", "rounding": "Rounding", "roundingBank": "Bank (round to the cent)", "roundingSpreadsheet": "Spreadsheet (no intermediate rounding)",
+    "preview": "Paid off {{payoff}} · Fixed-rate end {{balance}} · Interest {{interest}}",
+    "previewInvalid": "Complete the highlighted fields to see the projection.",
+    "contractLocked": "Contract data is locked for active loans.", "unlockContract": "Edit contract data",
+    "unlockTitle": "Edit contract data?", "unlockText": "Saving changed contract data replaces the original plan (re-baseline). Corrections are kept.",
+    "discardTitle": "Discard changes?", "discardText": "Your changes to this loan will be lost.", "discard": "Discard"
+  },
+  "helper": { "title": "Derive loan amount", "purchasePrice": "Purchase price", "incidentalCosts": "Incidental costs", "incidentalHint": "transfer tax, notary, agent", "equity": "Equity", "result": "Loan amount" },
+  "detail": {
+    "thisMonth": "This month · {{date}}", "firstPayment": "First payment · {{date}}", "payment": "Payment", "interest": "Interest", "principal": "Principal",
+    "special": "Special", "balanceAfter": "Balance after", "copyValues": "Copy values",
+    "fixedEnd": "End of fixed-rate period · {{date}}", "remaining": "Remaining balance", "paidOffBefore": "Paid off before end: {{date}}",
+    "interestPaid": "Interest paid", "principalPaid": "Principal paid", "specialPaid": "Special repaid", "paymentsMade": "Payments made",
+    "payoff": "Payoff", "payoffDate": "Payoff date", "payments": "Payments", "totalInterest": "Total interest", "totalSpecial": "Total special repayments",
+    "estimateNote": "* Estimate after the fixed-rate period, assuming {{rate}} interest.",
+    "vsPlan": "vs. original plan", "deltaPayoff": "Payoff", "deltaInterest": "Interest", "deltaBalance": "Balance at fixed-rate end",
+    "balanceChart": "Balance", "schedule": "Schedule", "toConfirm_one": "{{count}} special repayment to confirm", "toConfirm_other": "{{count}} special repayments to confirm",
+    "paidOffBanner": "This loan was paid off on {{date}}.", "markClosed": "Mark as closed", "paidOff": "Paid off {{date}}",
+    "keyFigures": "Key figures", "annuity": "Monthly payment", "outlay": "Monthly outlay", "equivRepayment": "Initial repayment"
+  },
+  "menu": {
+    "newLoan": "New loan…", "edit": "Edit", "duplicate": "Duplicate", "activate": "Mark as active", "revert": "Revert to offer",
+    "close": "Mark as closed", "reopen": "Reopen", "rebaseline": "Re-baseline", "delete": "Delete"
+  },
+  "lifecycle": {
+    "activateTitle": "Mark as active?", "activateText": "The current parameters and special repayment rules are frozen as the original plan.",
+    "revertTitle": "Revert to offer?", "revertText": "The original plan is discarded. Corrections are kept.",
+    "closeTitle": "Mark as closed?", "closeText": "Closed loans are read-only and get no notifications.",
+    "reopenTitle": "Reopen loan?", "reopenText": "The loan becomes active again, including its original plan.",
+    "rebaselineTitle": "Re-baseline?", "rebaselineText": "The original plan is replaced with the current parameters and rules. Corrections are kept.",
+    "deleteTitle": "Delete “{{name}}”?", "deleteText": "You can undo this for a few seconds."
+  },
+  "schedule": {
+    "title": "Schedule", "monthly": "Monthly", "yearly": "Yearly", "projection": "Projection",
+    "projections": { "current": "Current", "withoutSpecial": "Without special repayments", "originalPlan": "Original plan" },
+    "cols": { "n": "No", "date": "Date", "year": "Year", "opening": "Opening", "payment": "Payment", "interest": "Interest", "principal": "Principal", "special": "Special", "closing": "Balance", "payments": "Payments" },
+    "today": "today", "fixedEnd": "Fixed-rate end {{date}}", "paidOffBeforeEnd": "Paid off before fixed-rate end",
+    "legend": "✓ confirmed actual · ○ past, not yet confirmed · ✎ corrected · * estimate",
+    "jump": "Jump to", "jumpToday": "Today", "jumpFixedEnd": "Fixed-rate end", "jumpPayoff": "Payoff",
+    "rowTitle": "Payment {{n}} · {{date}}", "confirmAsPlanned": "Confirm as planned", "status": "Special status",
+    "statuses": { "none": "–", "planned": "planned", "confirmed": "confirmed", "unconfirmed": "not yet confirmed" },
+    "phase": "Phase", "phases": { "fixed": "Fixed rate", "followUp": "Follow-up (estimate)", "full": "Full year" },
+    "actual": "Actual", "noBaseline": "The original plan is only available for active and closed loans."
+  },
+  "settings": {
+    "title": "Settings", "language": "Language", "languages": { "system": "System", "de": "Deutsch", "en": "English" },
+    "appearance": "Appearance", "appearances": { "system": "System", "light": "Light", "dark": "Dark" }, "theme": "Theme",
+    "notifications": "Notifications", "notificationsWeb": "Notifications are available in the iOS and Android app.",
+    "data": "Data", "dataWeb": "Your data is stored in this browser only. Backup export and import follow in a later version.",
+    "dataNative": "Your data is included automatically in iCloud / Google backups on this platform.",
+    "about": "About", "privacy": "Privacy: no data leaves your device", "disclaimer": "Disclaimer", "licenses": "Licenses", "version": "Version {{version}}",
+    "install": "Install on iPhone: tap Share, then “Add to Home Screen”. The app then works offline."
+  },
+  "theme": { "title": "Theme", "preview": "Preview", "light": "light", "dark": "dark", "button": "Button", "inUse": "in use" },
+  "disclaimer": {
+    "title": "Before you start", "text": "Estimates only, not financial advice. The binding values are those of your lender.", "accept": "Understood"
+  },
+  "licenses": {
+    "text": "Color palettes: Solarized (Ethan Schoonover), Nord (Arctic Ice Studio), Gruvbox (Pavel Pertsev), Catppuccin — all MIT-licensed. Icons: Ionicons (MIT). Libraries: Expo, React Native, decimal.js-light, i18next, Zustand, idb (MIT)."
+  },
+  "a11y": { "amount": "{{label}} {{value}}" },
+  "err": {
+    "name": { "required": "Please enter a name.", "length": "At most {{max}} characters." },
+    "principal": { "range": "Between 1,000 € and 10,000,000 €." },
+    "rate": { "range": "Between 0 % and 20 %, at most 3 decimals." },
+    "repayment": { "range": "Between 0.5 % and 30 %." },
+    "term": { "range": "Between 1 and 50 years." },
+    "payment": { "belowInterest": "The payment must exceed the first month's interest." },
+    "fixed": { "range": "Between 12 and 480 months." },
+    "payout": { "required": "Please enter the payout date." },
+    "firstPayment": { "range": "On or after the payout date, at most 12 months later." },
+    "helper": { "negative": "Values must not be negative.", "equityTooHigh": "Equity must be less than price plus costs." },
+    "special": { "amount": "Amount must be greater than 0.", "endBeforeStart": "End must not be before start.", "month": "Choose a month." },
+    "override": { "amount": "Enter an amount greater than 0.", "duplicate": "There is already a correction for this date." },
+    "followUp": { "rate": "Between 0 % and 20 %.", "repayment": "Between 0.5 % and 30 %.", "belowInterest": "The follow-up payment does not cover the interest." },
+    "note": { "length": "At most {{max}} characters." },
+    "notify": { "days": "Between 1 and 30 days.", "months": "Up to 3 distinct values between 1 and 36." },
+    "contract": { "locked": "Contract data is locked." },
+    "lifecycle": { "invalid": "This action is not possible in the loan's current state." },
+    "loan": { "notFound": "Loan not found." },
+    "number": "Please enter a number."
+  },
+  "warn": {
+    "override": { "orphaned": "A correction no longer matches a payment date." },
+    "schedule": { "tooLong": "The loan is not paid off within 50 years." }
+  },
+  "months": { "1": "January", "2": "February", "3": "March", "4": "April", "5": "May", "6": "June", "7": "July", "8": "August", "9": "September", "10": "October", "11": "November", "12": "December" }
+}

@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "Annuity Loan Planner",
+    "slug": "annuity-loan-planner",
+    "version": "0.1.0",
+    "orientation": "default",
+    "icon": "./assets/icon/icon-1024.png",
+    "scheme": "annuity-loan-planner",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "eu.hohenegger.alp",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "eu.hohenegger.alp",
+      "allowBackup": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon/android-foreground.png",
+        "monochromeImage": "./assets/icon/android-monochrome.png",
+        "backgroundColor": "#1C6E8C"
+      }
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/icon/favicon-32.png",
+      "name": "Annuity Loan Planner",
+      "shortName": "Loan Planner",
+      "themeColor": "#F5F7FA",
+      "backgroundColor": "#F5F7FA"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icon/splash.png",
+          "imageWidth": 160,
+          "backgroundColor": "#F5F7FA",
+          "dark": {
+            "image": "./assets/icon/splash.png",
+            "backgroundColor": "#0E141B"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
