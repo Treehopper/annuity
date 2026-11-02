@@ -134,13 +134,18 @@ function computeRows(
 
     const Z = R(B.times(rate).div(12));
     const due = An.minus(Z);
-    const finalPayment = due.gte(B);
+    // A sub-cent remainder counts as paid off: in spreadsheet mode the unrounded
+    // annuity leaves a ~1e-37 residual after the last term month, which would
+    // otherwise produce a phantom 0.00 → 0.00 row.
+    const finalPayment = round2(B.minus(due)).lte(0);
     // Spreadsheet mode reproduces reference calculator 2, whose first row books
     // T₁ = P·t/12 instead of A − Z₁ (§2.2, §5.2, golden test G4).
     const T =
       n === 1 && !bankMode && params.payment.mode === 'initialRepayment'
         ? dmin(B.times(dec(params.payment.initialRepaymentRate)).div(12), B)
-        : dmin(due, B);
+        : finalPayment
+          ? B
+          : due;
 
     const activeRules = fixed || followUp.keepSpecialRules ? rules : [];
     const resolved = resolveSpecial(activeRules, overrides, d);

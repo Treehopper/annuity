@@ -51,4 +51,17 @@ describe('schedule properties', () => {
       { numRuns: 300 },
     );
   });
+
+  it('spreadsheet term loan ends exactly at the term, without a residual row', () => {
+    const l = loan({
+      principal: '1000.00',
+      nominalRate: '0.03',
+      fixedRateMonths: 12,
+      payment: { mode: 'term', termMonths: 12 },
+      rounding: 'spreadsheet',
+    });
+    const s = buildSchedule(l);
+    expect(s).toHaveLength(12);
+    expect(s[11]!.closing).toBe('0.00');
+  });
 });
