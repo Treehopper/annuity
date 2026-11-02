@@ -43,6 +43,11 @@ Without VS Code, use `.devcontainer/dc.sh` (needs only Docker and git on the hos
 .devcontainer/dc.sh rebuild     # no-cache rebuild, picks up new tool versions
 ```
 
+The container and its volumes are named after the checkout folder plus a hash of its path
+(e.g. `alp-annuity-6fa3c57c`), so each copy of the repo gets its own container. Copies share
+only the image. Every copy publishes Metro on host port 8081 by default, so give a second copy that
+runs at the same time its own `ALP_HOST_PORT`.
+
 `start` (and every command that starts the container) builds the image and recreates the
 container when `Dockerfile`, `init-firewall.sh`, `allowed-domains.txt`, `dc.sh` or the host port
 changed. It applies the firewall whenever it is not active and stops the container if that fails.

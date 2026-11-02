@@ -6,7 +6,14 @@ set -euo pipefail
 
 DC_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(dirname "$DC_DIR")
-NAME=alp-devcontainer
+
+sha256() {
+    if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi
+}
+
+# One container (and set of volumes) per checkout folder, so copies of this repo do not share one
+SLUG=$(basename "$ROOT" | tr -c 'A-Za-z0-9_.-' '-' | sed 's/^-*//; s/-*$//')
+NAME=alp-${SLUG:-workspace}-$(printf '%s' "$ROOT" | sha256 | cut -c1-8)
 IMAGE=alp-devcontainer
 # Metro / Expo web listens on 8081 in the container; override the host side if 8081 is taken
 HOST_PORT=${ALP_HOST_PORT:-8081}
@@ -24,10 +31,6 @@ Usage: [ALP_HOST_PORT=8081] $(basename "$0") <command> [args]
   rebuild          Rebuild the image without cache (updates Claude Code, Playwright, ...)
   status           Show container, image and firewall state
 EOF
-}
-
-sha256() {
-    if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi
 }
 
 config_hash() {
@@ -130,7 +133,8 @@ run_in() {
 status() {
     local state
     state=$(container_state)
-    echo "Container: $state"
+    echo "Container: $NAME ($state)"
+    echo "Workspace: $ROOT"
     if [ "$state" != "missing" ]; then
         if [ "$(container_hash)" = "$HASH" ]; then echo "Config:    current ($HASH)"; else echo "Config:    outdated, next start recreates it"; fi
     fi
