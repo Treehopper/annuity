@@ -45,17 +45,19 @@ Without VS Code, use `.devcontainer/dc.sh` (needs only Docker and git on the hos
 
 The container and its volumes are named after the checkout folder plus a hash of its path
 (e.g. `alp-annuity-6fa3c57c`), so each copy of the repo gets its own container. Copies share
-only the image. Every copy publishes Metro on host port 8081 by default, so give a second copy that
-runs at the same time its own `ALP_HOST_PORT`.
+only the image, and each one publishes Metro on its own free host port (see below).
 
 `start` (and every command that starts the container) builds the image and recreates the
-container when `Dockerfile`, `init-firewall.sh`, `allowed-domains.txt`, `dc.sh` or the host port
+container when `Dockerfile`, `init-firewall.sh`, `allowed-domains.txt`, `dc.sh` or `ALP_HOST_PORT`
 changed. It applies the firewall whenever it is not active and stops the container if that fails.
 It copies your host git name and email into the container. `node_modules`, the Claude login and
 shell history live in named volumes and survive recreation.
 
-Metro / Expo web (`npx expo start --web`) listens on 8081 in the container and is published on
-`localhost:8081`. If that port is taken, set `ALP_HOST_PORT`, e.g. `ALP_HOST_PORT=18081 .devcontainer/dc.sh start`.
+Metro / Expo web (`npx expo start --web`) listens on 8081 in the container. When the container is
+created it is published on the first free host port from `localhost:8081` up (`status` shows which),
+and keeps that port until the container is recreated. If the port has been taken while the container
+was stopped, `start` recreates it on a free one. To force a port, set `ALP_HOST_PORT`, e.g.
+`ALP_HOST_PORT=18081 .devcontainer/dc.sh start`; then only that port is tried.
 
 With VS Code: "Dev Containers: Reopen in Container", then run `claude-auto` in the terminal.
 `devcontainer.json` and `dc.sh` describe the same container; keep their run options in sync.

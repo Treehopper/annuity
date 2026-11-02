@@ -15,12 +15,14 @@ sha256() {
 SLUG=$(basename "$ROOT" | tr -c 'A-Za-z0-9_.-' '-' | sed 's/^-*//; s/-*$//')
 NAME=alp-${SLUG:-workspace}-$(printf '%s' "$ROOT" | sha256 | cut -c1-8)
 IMAGE=alp-devcontainer
-# Metro / Expo web listens on 8081 in the container; override the host side if 8081 is taken
-HOST_PORT=${ALP_HOST_PORT:-8081}
+# Metro / Expo web listens on 8081 in the container. Without ALP_HOST_PORT the host side is the
+# first free port from 8081 up, picked when the container is created and kept from then on.
+HOST_PORT=${ALP_HOST_PORT:-}
+PORT_TRIES=20
 
 usage() {
     cat <<EOF
-Usage: [ALP_HOST_PORT=8081] $(basename "$0") <command> [args]
+Usage: [ALP_HOST_PORT=<port>] $(basename "$0") <command> [args]
 
   start            Build/recreate if needed, start the container, apply the firewall
   shell            start, then open zsh in the container
@@ -34,7 +36,7 @@ EOF
 }
 
 config_hash() {
-    { (cd "$DC_DIR" && cat Dockerfile init-firewall.sh allowed-domains.txt dc.sh); echo "$HOST_PORT"; } | sha256 | cut -c1-12
+    (cd "$DC_DIR" && cat Dockerfile init-firewall.sh allowed-domains.txt dc.sh) | sha256 | cut -c1-12
 }
 
 HASH=$(config_hash)
@@ -49,6 +51,11 @@ container_hash() {
     docker inspect -f '{{index .Config.Labels "alp.hash"}}' "$NAME" 2>/dev/null || true
 }
 
+# Host port the container publishes Metro on, from its config so it also works while stopped
+container_port() {
+    docker inspect -f '{{range (index .HostConfig.PortBindings "8081/tcp")}}{{.HostPort}}{{end}}' "$NAME" 2>/dev/null || true
+}
+
 build_image() {
     echo "Building image $IMAGE:$HASH..."
     docker build "$@" -t "$IMAGE:$HASH" "$DC_DIR"
@@ -57,9 +64,8 @@ build_image() {
     done
 }
 
-create_container() {
-    echo "Creating container $NAME..."
-    if ! docker run -d --init --name "$NAME" --hostname alp \
+run_container() {
+    docker run -d --init --name "$NAME" --hostname alp \
         --label "alp.hash=$HASH" \
         --cap-add=NET_ADMIN --cap-add=NET_RAW \
         -e NODE_OPTIONS=--max-old-space-size=4096 \
@@ -70,13 +76,33 @@ create_container() {
         -v "$NAME-node-modules:/workspace/node_modules" \
         -v "$NAME-claude-config:/home/node/.claude" \
         -v "$NAME-bashhistory:/commandhistory" \
-        -p "127.0.0.1:$HOST_PORT:8081" \
+        -p "127.0.0.1:$1:8081" \
         -u node -w /workspace \
-        "$IMAGE:$HASH" sleep infinity >/dev/null; then
+        "$IMAGE:$HASH" sleep infinity
+}
+
+# Tries ALP_HOST_PORT only, or 8081 and up until Docker can bind one
+create_container() {
+    local port=${HOST_PORT:-8081} last err
+    if [ -n "$HOST_PORT" ]; then last=$port; else last=$((port + PORT_TRIES - 1)); fi
+    echo "Creating container $NAME..."
+    while [ "$port" -le "$last" ]; do
+        if err=$(run_container "$port" 2>&1 >/dev/null); then
+            return 0
+        fi
         docker rm -f "$NAME" >/dev/null 2>&1 || true
-        echo "Could not start the container. If port $HOST_PORT is taken, set ALP_HOST_PORT." >&2
-        exit 1
+        case "$err" in
+            *"port is already allocated"*|*"address already in use"*) echo "Port $port is taken." ;;
+            *) echo "$err" >&2; echo "Could not start the container." >&2; exit 1 ;;
+        esac
+        port=$((port + 1))
+    done
+    if [ -n "$HOST_PORT" ]; then
+        echo "Port $HOST_PORT is taken. Free it, or unset ALP_HOST_PORT to pick a free port." >&2
+    else
+        echo "No free port in $((last - PORT_TRIES + 1))-$last. Set ALP_HOST_PORT." >&2
     fi
+    exit 1
 }
 
 firewall_active() {
@@ -108,12 +134,22 @@ start() {
     if [ "$(container_state)" != "missing" ] && [ "$(container_hash)" != "$HASH" ]; then
         echo "Configuration changed, recreating the container..."
         docker rm -f "$NAME" >/dev/null
+    elif [ "$(container_state)" != "missing" ] && [ -n "$HOST_PORT" ] && [ "$(container_port)" != "$HOST_PORT" ]; then
+        echo "Host port changed, recreating the container..."
+        docker rm -f "$NAME" >/dev/null
     fi
 
     case "$(container_state)" in
         missing) create_container; created=true ;;
         running) ;;
-        *) docker start "$NAME" >/dev/null ;;
+        *)
+            # Its port may have been taken while it was stopped; then move it to a free one
+            if ! docker start "$NAME" >/dev/null 2>&1; then
+                echo "Port $(container_port) is no longer free, recreating the container..."
+                docker rm -f "$NAME" >/dev/null
+                create_container
+            fi
+            ;;
     esac
 
     firewall_active || apply_firewall
@@ -138,7 +174,7 @@ status() {
     if [ "$state" != "missing" ]; then
         if [ "$(container_hash)" = "$HASH" ]; then echo "Config:    current ($HASH)"; else echo "Config:    outdated, next start recreates it"; fi
     fi
-    [ "$state" = "running" ] && echo "Metro:     http://localhost:$HOST_PORT"
+    [ "$state" = "running" ] && echo "Metro:     http://localhost:$(container_port)"
     if [ "$state" = "running" ]; then
         if firewall_active; then echo "Firewall:  active"; else echo "Firewall:  NOT active"; fi
     fi
