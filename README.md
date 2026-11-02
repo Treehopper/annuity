@@ -243,7 +243,7 @@ Priority: **M** = must (v1), **S** = should (v1 if time permits), **C** = could 
 | A1 | As a borrower, I want to enter loan amount, interest rate, fixed-rate period and payment definition, so that I get an amortization schedule. | M | Schedule is shown within ≤ 200 ms after the last input. All fields are validated inline (§5.6). The annuity is displayed immediately |
 | A2 | As a borrower, I want to choose whether the payment is derived from the initial repayment rate, a total term or a fixed amount, so that I can enter any offer format. | M | Switching mode keeps the loan amount and rate. The derived values of the other modes are shown as read-only hints (e.g. "≙ 8.60 % initial repayment") |
 | A3 | As a borrower, I want to optionally derive the loan amount from purchase price, incidental costs and equity. | S | Helper sheet computes the loan amount. The user can override it. Inputs are stored with the loan |
-| A4 | As a borrower, I want to add a recurring special repayment (monthly or yearly, with start/end), so that I see its effect. | M | Yearly: choose the month. Start defaults to the first payment date. End defaults to open |
+| A4 | As a borrower, I want to add a recurring special repayment (monthly or yearly, with start/end), so that I see its effect. | M | Yearly: choose the month (default January, and new rules are yearly). Start defaults to the first payment date. End defaults to the end of the fixed-rate period and follows it until set; it can be cleared to leave the rule open |
 | A5 | As a borrower, I want to see the key figures at the end of the fixed-rate period. | M | The detail screen shows: remaining balance, interest paid, regular principal paid, special repayments paid, payments made, and the date (§5.10) |
 | A6 | As a borrower, I want an estimate of the payoff date after the fixed-rate period, assuming a follow-up interest rate. | M | Default follow-up rate = current rate. Choose "keep monthly payment" or "recalculate with repayment rate x %". The estimate is visually marked as such |
 | A7 | As a borrower, I want to duplicate a loan to create a variant. | M | Copy rules in §5.11. The name gets the suffix "(copy)" |
@@ -1193,8 +1193,8 @@ All example figures in the mockups are computed with the engine rules of §5 (ba
 ┌──────────────────────────────────────┐
 │ ←  New loan                  [Save]  │
 ├──────────────────────────────────────┤
-│ Name        [DummyBank 10y        ]  │
 │ Lender      [DummyBank            ]  │
+│ Name        [DummyBank 10y        ]  │
 │                                      │
 │ LOAN                                 │
 │ Loan amount [    280,000.00 €] [⚙]   │
@@ -1223,6 +1223,10 @@ All example figures in the mockups are computed with the engine rules of §5 (ba
 └──────────────────────────────────────┘
 ```
 
+- The name follows the lender as you type until you edit the name yourself.
+- New loans start with a 10-year fixed-rate period and the payment set by amount (300,000 € × (3.5 % + 2 %) / 12 = 1,375.00 €).
+- A new special repayment rule is yearly in January, from the first payment to the end of the fixed-rate period. Its end date follows the fixed-rate end (period or first payment changes) until you set it yourself.
+- Number fields are re-formatted when the language changes while a draft is open.
 - Live preview bar (sticky, bottom): `Paid off 03/2034 · Fixed-rate end 0.00 € · Interest 44,176 €`.
 - The keyboard is numeric with a locale-aware decimal key. Amounts are formatted on blur.
 - For active loans, the LOAN and MONTHLY PAYMENT sections are locked behind [Edit contract data] (§5.11).

@@ -1,5 +1,5 @@
 /** Headless end-to-end flow against in-memory ports (§4.2 step 4). */
-import { buildSchedule, computeKpis, createCore } from '../src';
+import { buildSchedule, computeKpis, createCore, validateLoan } from '../src';
 import { inMemoryPorts } from './inMemoryPorts';
 import { loan, monthly1100 } from './fixtures';
 
@@ -67,6 +67,13 @@ describe('core services (headless)', () => {
     const t = await core.loans.template();
     expect(t.params.payoutDate).toBe('2026-11-01');
     expect(t.params.firstPaymentDate).toBe('2026-12-01');
+  });
+
+  it('template defaults: 10-year fixed rate, payment by amount', async () => {
+    const t = await createCore(inMemoryPorts('2026-10-15')).loans.template();
+    expect(t.params.fixedRateMonths).toBe(120);
+    expect(t.params.payment).toEqual({ mode: 'fixedAmount', amount: '1375.00' });
+    expect(validateLoan({ ...t, name: 'A' })).toEqual([]);
   });
 
   it('settings default and update', async () => {

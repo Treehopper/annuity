@@ -58,7 +58,8 @@ export function newLoanTemplate(args: { id: string; today: ISODate; now: string;
       nominalRate,
       ...defaultLoanDates(args.today),
       fixedRateMonths: 120,
-      payment: { mode: 'initialRepayment', initialRepaymentRate: '0.02' },
+      // Monthly payment set by amount: 300,000 € × (3.5 % + 2 % initial repayment) / 12.
+      payment: { mode: 'fixedAmount', amount: '1375.00' },
       rounding: 'bank',
     },
     specialRules: [],

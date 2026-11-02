@@ -36,10 +36,12 @@ async function createLoan(page: Page, l: LoanInput) {
     await page.getByTestId('payment-mode-term').click();
     await page.getByTestId('field-term').fill(l.value);
   } else {
+    await page.getByTestId('payment-mode-initialRepayment').click();
     await page.getByTestId('field-initial-repayment').fill(l.value);
   }
   if (l.special) {
     await page.getByTestId('add-rule').click();
+    await page.getByTestId('rule-0-frequency-monthly').click();
     await page.getByTestId('rule-0-amount').fill(l.special);
   }
   await page.getByTestId('edit-save').click();
@@ -139,6 +141,7 @@ test('validation messages and live preview (A1, §5.6)', async ({ page }) => {
   await expect(page.getByText('Between 0 % and 20 %, at most 3 decimals.')).toBeVisible();
   await expect(page.getByTestId('preview-bar')).toContainText('Complete the highlighted fields');
   await page.getByTestId('field-rate').fill('3.32');
+  await page.getByTestId('payment-mode-initialRepayment').click();
   await page.getByTestId('field-initial-repayment').fill('8.6');
   await expect(page.getByTestId('payment-result')).toHaveText('€2,980.00'); // 300,000 € template amount × (3.32 % + 8.6 %) / 12
   await page.getByTestId('edit-save').click();

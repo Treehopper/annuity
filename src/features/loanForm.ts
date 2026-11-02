@@ -1,5 +1,8 @@
 import {
+  addMonths,
   defaultFirstPaymentDate,
+  fixedRateEndDate,
+  isISODate,
   type Loan,
   type LoanParams,
   type PaymentMode,
@@ -9,7 +12,7 @@ import { create } from 'zustand';
 
 import type { AppLanguage } from '@/i18n';
 
-import { createFormatter, parseMoneyInput, parsePercentInput } from './format';
+import { createFormatter, parseDecimalInput, parseMoneyInput, parsePercentInput } from './format';
 
 /** Text-based form state of the "New / edit loan" panel (§6.3). Kept in the store across layout switches. */
 export interface RuleForm {
@@ -19,11 +22,17 @@ export interface RuleForm {
   amount: string;
   start: string;
   end?: string;
+  /** The end date follows the end of the fixed-rate period until the user sets it. */
+  endFollowsFixed: boolean;
 }
 
 export interface LoanForm {
   base: Loan;
+  /** Language the number fields are formatted in. Parsing always uses this, not the current UI language. */
+  lang: AppLanguage;
   name: string;
+  /** The name follows the lender until the user edits it. */
+  nameTouched: boolean;
   lender: string;
   notes: string;
   principal: string;
@@ -52,9 +61,12 @@ export function formFromLoan(loan: Loan, lang: AppLanguage): LoanForm {
   const p = loan.params;
   const fixed = String(p.fixedRateMonths);
   const pay = p.payment;
+  const fixedEnd = isISODate(p.firstPaymentDate) ? fixedRateEndDate(loan) : undefined;
   return {
     base: loan,
+    lang,
     name: loan.name,
+    nameTouched: loan.name !== (loan.lender ?? ''),
     lender: loan.lender ?? '',
     notes: loan.notes ?? '',
     principal: f.moneyInput(p.principal),
@@ -76,10 +88,11 @@ export function formFromLoan(loan: Loan, lang: AppLanguage): LoanForm {
     rules: loan.specialRules.map((r) => ({
       id: r.id,
       frequency: r.frequency,
-      month: r.month ?? 12,
+      month: r.month ?? 1,
       amount: f.moneyInput(r.amount),
       start: r.start,
       end: r.end,
+      endFollowsFixed: r.end !== undefined && r.end === fixedEnd,
     })),
     followUpRate: f.percentInput(loan.followUp.rate),
     followUpMode: loan.followUp.payment.mode,
@@ -97,7 +110,8 @@ export interface FormResult {
 }
 
 /** Builds the loan from the form. Unparsable numbers become parse errors (message key err.number). */
-export function loanFromForm(form: LoanForm, lang: AppLanguage): FormResult {
+export function loanFromForm(form: LoanForm): FormResult {
+  const lang = form.lang;
   const errors: Record<string, string> = {};
   const money = (path: string, text: string) => {
     const v = parseMoneyInput(text, lang);
@@ -110,7 +124,7 @@ export function loanFromForm(form: LoanForm, lang: AppLanguage): FormResult {
     return v ?? '0';
   };
 
-  const fixedRateMonths = form.fixedPreset === 'custom' ? Number(form.fixedMonths) : Number(form.fixedPreset);
+  const fixedRateMonths = formFixedMonths(form);
   if (!Number.isFinite(fixedRateMonths)) errors['params.fixedRateMonths'] = 'err.number';
 
   let payment: LoanParams['payment'];
@@ -173,6 +187,76 @@ export function loanFromForm(form: LoanForm, lang: AppLanguage): FormResult {
     },
   };
   return { loan: Object.keys(errors).length === 0 ? loan : undefined, parseErrors: errors };
+}
+
+function formFixedMonths(form: LoanForm): number {
+  return form.fixedPreset === 'custom' ? Number(form.fixedMonths) : Number(form.fixedPreset);
+}
+
+/** Last payment date of the fixed-rate period, or undefined while the inputs are incomplete. */
+export function formFixedRateEnd(form: LoanForm): string | undefined {
+  const months = formFixedMonths(form);
+  if (!form.firstPaymentDate || !isISODate(form.firstPaymentDate) || !Number.isInteger(months) || months < 1) return undefined;
+  return addMonths(form.firstPaymentDate, months - 1);
+}
+
+/**
+ * Applies a field change and keeps the derived defaults in step: the name follows the lender
+ * until edited, and rule end dates follow the fixed-rate end until set by the user.
+ */
+export function applyFormPatch(form: LoanForm, patch: Partial<LoanForm>): LoanForm {
+  const next = { ...form, ...patch };
+  if (!next.nameTouched) next.name = next.lender.slice(0, 80);
+  const fixedEnd = formFixedRateEnd(next);
+  if (fixedEnd && next.rules.some((r) => r.endFollowsFixed && r.end !== fixedEnd)) {
+    next.rules = next.rules.map((r) => (r.endFollowsFixed ? { ...r, end: fixedEnd } : r));
+  }
+  return next;
+}
+
+/** A new special repayment rule: yearly in January, from the first payment to the fixed-rate end. */
+export function newRuleForm(form: LoanForm, id: string): RuleForm {
+  const end = formFixedRateEnd(form);
+  return { id, frequency: 'yearly', month: 1, amount: '', start: form.firstPaymentDate ?? '', end, endFollowsFixed: true };
+}
+
+/**
+ * Re-formats the number fields for another language. Drafts outlive a language switch in
+ * Settings; without this, "300,000.00" typed in English would be read as 300 € in German.
+ * Text that doesn't parse is left as typed.
+ */
+export function relocalizeForm(form: LoanForm, lang: AppLanguage): LoanForm {
+  if (form.lang === lang) return form;
+  const to = createFormatter(lang);
+  const money = (s: string) => {
+    const v = parseMoneyInput(s, form.lang);
+    return v === undefined ? s : to.moneyInput(v);
+  };
+  const pct = (s: string) => {
+    const v = parsePercentInput(s, form.lang);
+    return v === undefined ? s : to.percentInput(v);
+  };
+  const years = (s: string) => {
+    const v = parseDecimalInput(s, form.lang, false);
+    return v === undefined ? s : to.percentInput(String(Number(v) / 100));
+  };
+  return {
+    ...form,
+    lang,
+    principal: money(form.principal),
+    helper: form.helper && {
+      purchasePrice: money(form.helper.purchasePrice),
+      incidentalCosts: money(form.helper.incidentalCosts),
+      equity: money(form.helper.equity),
+    },
+    rate: pct(form.rate),
+    initialRepayment: pct(form.initialRepayment),
+    termYears: years(form.termYears),
+    amount: money(form.amount),
+    rules: form.rules.map((r) => ({ ...r, amount: money(r.amount) })),
+    followUpRate: pct(form.followUpRate),
+    followUpRepayment: pct(form.followUpRepayment),
+  };
 }
 
 /** Unsaved drafts survive layout switches and remounts (§4.12 rule 9). */

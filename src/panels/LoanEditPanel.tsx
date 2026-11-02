@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
 import { useFormat } from '@/features/format';
-import { formFromLoan, loanFromForm, useDraftStore, type LoanForm, type RuleForm } from '@/features/loanForm';
+import { applyFormPatch, formFromLoan, loanFromForm, newRuleForm, relocalizeForm, useDraftStore, type LoanForm, type RuleForm } from '@/features/loanForm';
 import { useToday } from '@/features/projections';
 import type { AppLanguage } from '@/i18n';
 import { getCore } from '@/composition';
@@ -62,17 +62,20 @@ export function LoanEditPanel({ loanId, onSaved, onCancel }: LoanEditPanelProps)
     };
   }, [draft, initial, existing, lang, draftKey, setDraft]);
 
-  const form = draft ?? initial;
-  const update = (patch: Partial<LoanForm>) => form && setDraft(draftKey, { ...form, ...patch });
+  // The draft outlives a language switch in Settings: show and parse it in the current language.
+  const stored = draft ?? initial;
+  const form = useMemo(() => stored && relocalizeForm(stored, lang), [stored, lang]);
+  const initialForm = useMemo(() => initial && relocalizeForm(initial, lang), [initial, lang]);
+  const update = (patch: Partial<LoanForm>) => form && setDraft(draftKey, applyFormPatch(form, patch));
 
-  const built = useMemo(() => (form ? loanFromForm(form, lang) : undefined), [form, lang]);
+  const built = useMemo(() => (form ? loanFromForm(form) : undefined), [form]);
   const issues = useMemo(() => (built?.loan ? validateLoan(built.loan) : []), [built]);
 
   const isNew = !loanId;
   const status = existing?.status ?? 'offer';
   const contractLocked = status === 'closed' || (status === 'active' && !form?.contractUnlocked);
   const readOnly = status === 'closed';
-  const dirty = !!form && !!initial && JSON.stringify({ ...form, base: null }) !== JSON.stringify({ ...initial, base: null });
+  const dirty = !!form && !!initialForm && JSON.stringify({ ...form, base: null }) !== JSON.stringify({ ...initialForm, base: null });
 
   const save = async () => {
     if (!form || !built) return;
@@ -130,16 +133,16 @@ export function LoanEditPanel({ loanId, onSaved, onCancel }: LoanEditPanelProps)
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: space.l, paddingBottom: 120, gap: space.m, maxWidth: 720, width: '100%', alignSelf: 'center' }} keyboardShouldPersistTaps="handled">
+        <Field label={t('edit.lender')} value={form.lender} onChangeText={(lender) => update({ lender })} testID="field-lender" />
         <Field
           label={t('edit.name')}
           value={form.name}
           placeholder={t('edit.namePlaceholder')}
-          onChangeText={(name) => update({ name })}
+          onChangeText={(name) => update({ name, nameTouched: true })}
           error={errorFor('name')}
           maxLength={80}
           testID="field-name"
         />
-        <Field label={t('edit.lender')} value={form.lender} onChangeText={(lender) => update({ lender })} testID="field-lender" />
 
         <LoanSection form={form} update={update} errorFor={errorFor} locked={contractLocked} />
         {status === 'active' && !form.contractUnlocked ? (
@@ -191,10 +194,9 @@ type SectionProps = {
 };
 
 function LoanSection({ form, update, errorFor, locked }: SectionProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const f = useFormat();
   const [helperOpen, setHelperOpen] = useState(false);
-  const lang = (i18n.language === 'de' ? 'de' : 'en') as AppLanguage;
   const presets: LoanForm['fixedPreset'][] = ['60', '120', '180', 'custom'];
   return (
     <>
@@ -204,7 +206,7 @@ function LoanSection({ form, update, errorFor, locked }: SectionProps) {
         value={form.principal}
         onChangeText={(principal) => update({ principal })}
         onBlur={() => {
-          const v = loanFromForm(form, lang).loan?.params.principal;
+          const v = loanFromForm(form).loan?.params.principal;
           if (v) update({ principal: f.moneyInput(v) });
         }}
         keyboardType="decimal-pad"
@@ -390,6 +392,7 @@ function SpecialSection({ form, update, errorFor, locked }: SectionProps) {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s }}>
             <View style={{ flex: 1 }}>
               <Segmented
+                testID={`rule-${idx}-frequency`}
                 value={r.frequency}
                 onChange={(frequency) => !locked && setRule(idx, { frequency })}
                 options={[
@@ -415,7 +418,7 @@ function SpecialSection({ form, update, errorFor, locked }: SectionProps) {
           />
           <View style={{ flexDirection: 'row', gap: space.m, flexWrap: 'wrap' }}>
             <DateField label={t('edit.ruleStart')} value={r.start} onChange={(start) => start && setRule(idx, { start })} disabled={locked} error={errorFor(`specialRules.${idx}.start`)} />
-            <DateField label={t('edit.ruleEnd')} value={r.end} optional onChange={(end) => setRule(idx, { end })} disabled={locked} error={errorFor(`specialRules.${idx}.end`)} />
+            <DateField label={t('edit.ruleEnd')} value={r.end} optional onChange={(end) => setRule(idx, { end, endFollowsFixed: false })} disabled={locked} error={errorFor(`specialRules.${idx}.end`)} />
           </View>
         </Card>
       ))}
@@ -427,10 +430,7 @@ function SpecialSection({ form, update, errorFor, locked }: SectionProps) {
           testID="add-rule"
           onPress={() =>
             update({
-              rules: [
-                ...form.rules,
-                { id: `rule-${Date.now().toString(36)}-${form.rules.length}`, frequency: 'monthly', month: 12, amount: '', start: form.firstPaymentDate ?? '' },
-              ],
+              rules: [...form.rules, newRuleForm(form, `rule-${Date.now().toString(36)}-${form.rules.length}`)],
             })
           }
         />
@@ -518,11 +518,10 @@ function FinancingHelperSheet({
 }
 
 function FinancingHelperBody({ form, onClose, onApply }: { form: LoanForm; onClose(): void; onApply(helper: NonNullable<LoanForm['helper']>, principal: string): void }) {
-  const { t, i18n } = useTranslation();
-  const lang = (i18n.language === 'de' ? 'de' : 'en') as AppLanguage;
+  const { t } = useTranslation();
   const f = useFormat();
   const [h, setH] = useState(form.helper ?? { purchasePrice: '', incidentalCosts: '', equity: '' });
-  const parse = (s: string) => (s.trim() === '' ? 0 : Number(loanFromForm({ ...form, principal: s }, lang).loan?.params.principal ?? NaN));
+  const parse = (s: string) => (s.trim() === '' ? 0 : Number(loanFromForm({ ...form, principal: s }).loan?.params.principal ?? NaN));
   const values = [parse(h.purchasePrice), parse(h.incidentalCosts), parse(h.equity)];
   const invalid = values.some((v) => !Number.isFinite(v) || v < 0);
   const result = invalid ? NaN : values[0]! + values[1]! - values[2]!;

@@ -1,10 +1,10 @@
-import '@/i18n';
-
 import { defaultSettings, type Loan } from '@alp/core';
-import { render, screen } from '@testing-library/react-native';
+import { act, render, screen } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { useDraftStore } from '@/features/loanForm';
+import i18n from '@/i18n';
 import { useAppStore } from '@/store/appStore';
 import { FixedPane } from '@/ui/layout/layout';
 import { ThemeProvider } from '@/ui/theme/useTheme';
@@ -89,6 +89,20 @@ describe.each(WIDTHS)('panels at %ipx (§4.12 rule 10)', (width) => {
     expect(screen.getByText('Contract data is locked for active loans.')).toBeTruthy();
     expect(screen.getByTestId('field-principal').props.editable).toBe(false);
     expect(screen.getByTestId('field-name').props.editable).not.toBe(false);
+  });
+
+  it('LoanEditPanel draft stays valid after a language switch in Settings (regression)', async () => {
+    await at(width, <LoanEditPanel loanId="b" onSaved={jest.fn()} onCancel={jest.fn()} />);
+    expect(screen.getByTestId('field-principal').props.value).toBe('280,000.00');
+    // Settings → language → German, then back to the still-open draft.
+    await act(() => i18n.changeLanguage('de'));
+    try {
+      expect(screen.getByTestId('field-principal').props.value).toBe('280.000,00');
+      expect(screen.queryByText('Zwischen 1.000 € und 10.000.000 €.')).toBeNull();
+    } finally {
+      await act(() => i18n.changeLanguage('en'));
+      useDraftStore.setState({ drafts: {} });
+    }
   });
 
   it('ThemePanel lists all five palettes', async () => {
