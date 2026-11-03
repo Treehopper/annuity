@@ -26,6 +26,8 @@ import { AdaptiveSheet, askConfirm } from '@/ui/overlays';
 import { useTheme } from '@/ui/theme/useTheme';
 import { radius, space } from '@/ui/theme/tokens';
 
+import { RateInfoSheet } from './RateInfoSheet';
+
 export interface LoanEditPanelProps {
   /** Loan id, or undefined for a new loan. */
   loanId?: string;
@@ -299,6 +301,7 @@ function PaymentSection({ form, update, errorFor, locked, loan }: SectionProps &
   const { t } = useTranslation();
   const f = useFormat();
   const { c } = useTheme();
+  const [infoOpen, setInfoOpen] = useState(false);
   const hints = useMemo(() => {
     if (!loan) return undefined;
     try {
@@ -366,8 +369,13 @@ function PaymentSection({ form, update, errorFor, locked, loan }: SectionProps &
       {hints ? (
         <View style={{ gap: space.xs, padding: space.m, borderRadius: radius.m, backgroundColor: c.surfaceAlt }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text bold>{t('edit.paymentResult')}</Text>
-            <Text variant="amountLarge" testID="payment-result">
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: -space.s, marginLeft: -space.xs }}>
+              <Text bold>{t('edit.paymentResult')}</Text>
+              {form.mode !== 'fixedAmount' && loan ? (
+                <IconButton icon="information-circle-outline" size={20} label={t('edit.rateInfo')} onPress={() => setInfoOpen(true)} testID="rate-info-button" />
+              ) : null}
+            </View>
+            <Text variant="amountLarge" testID="payment-result" style={{ alignSelf: 'center' }}>
               {f.money(hints.annuity)}
             </Text>
           </View>
@@ -377,6 +385,7 @@ function PaymentSection({ form, update, errorFor, locked, loan }: SectionProps &
           ) : null}
         </View>
       ) : null}
+      {loan && hints ? <RateInfoSheet params={loan.params} annuity={hints.annuity} f={f} visible={infoOpen} onClose={() => setInfoOpen(false)} /> : null}
     </>
   );
 }

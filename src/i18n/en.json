@@ -31,7 +31,7 @@
     "sectionPayment": "Monthly payment",
     "modes": { "initialRepayment": "Initial repayment", "term": "Term", "fixedAmount": "Amount" },
     "initialRepayment": "Initial repayment p.a.", "termYears": "Term", "amount": "Payment amount",
-    "paymentResult": "Payment", "hintRepayment": "≙ initial repayment {{rate}}", "hintTerm": "≙ term {{years}} y {{months}} mo. without special repayments",
+    "paymentResult": "Payment", "rateInfo": "How is the payment calculated?", "hintRepayment": "≙ initial repayment {{rate}}", "hintTerm": "≙ term {{years}} y {{months}} mo. without special repayments",
     "sectionSpecial": "Special repayments", "addRule": "Add rule", "removeRule": "Remove rule", "monthly": "Monthly", "yearly": "Yearly",
     "ruleMonth": "Month", "ruleAmount": "Amount", "ruleStart": "From", "ruleEnd": "Until", "ruleEndOpen": "open",
     "sectionFollowUp": "After fixed-rate period (estimate)", "assumedRate": "Assumed rate", "keepPayment": "Keep payment",
@@ -68,6 +68,7 @@
     "rebaselineTitle": "Re-baseline?", "rebaselineText": "The original plan is replaced with the current parameters and rules. Corrections are kept.",
     "deleteTitle": "Delete “{{name}}”?", "deleteText": "You can undo this for a few seconds."
   },
+  "rateInfo": {"title": "How the payment is calculated", "yourLoan": "With your values", "roundingBank": "Rounding “Bank”: the payment is rounded to the cent; the last payment absorbs the rounding.", "roundingSpreadsheet": "Rounding “Spreadsheet”: calculation continues without intermediate rounding; amounts are shown to the cent.", "repayment": {"formula": "Payment = P × (i + t) ÷ 12", "text": "The payment stays the same during the fixed-rate period. In the first month, exactly the interest rate and the initial repayment (each ÷ 12) apply to the balance. As the balance falls, the interest share shrinks every month and the repayment share grows. This determines the term.", "legend": "P = loan amount, i = interest rate, t = initial repayment"}, "term": {"formula": "Payment = P × q ÷ (1 − (1 + q)⁻ⁿ)", "legend": "P = loan amount, q = interest rate ÷ 12 (monthly rate), n = number of monthly payments", "q": "q = {{rate}} ÷ 12 = {{q}}", "n": "n = {{n}} monthly payments", "text": "This is the constant payment (annuity) that pays off the loan after exactly {{n}} payments without special repayments. Special repayments don't change the payment; they shorten the term."}},
   "schedule": {
     "title": "Schedule", "monthly": "Monthly", "yearly": "Yearly", "projection": "Projection",
     "projections": { "current": "Current", "withoutSpecial": "Without special repayments", "originalPlan": "Original plan" },

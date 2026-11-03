@@ -31,7 +31,7 @@
     "sectionPayment": "Monatliche Rate",
     "modes": { "initialRepayment": "Anf. Tilgung", "term": "Laufzeit", "fixedAmount": "Betrag" },
     "initialRepayment": "Anfängliche Tilgung p. a.", "termYears": "Laufzeit", "amount": "Ratenbetrag",
-    "paymentResult": "Rate", "hintRepayment": "≙ anfängliche Tilgung {{rate}}", "hintTerm": "≙ Laufzeit {{years}} J. {{months}} Mon. ohne Sondertilgungen",
+    "paymentResult": "Rate", "rateInfo": "Wie wird die Rate berechnet?", "hintRepayment": "≙ anfängliche Tilgung {{rate}}", "hintTerm": "≙ Laufzeit {{years}} J. {{months}} Mon. ohne Sondertilgungen",
     "sectionSpecial": "Sondertilgungen", "addRule": "Regel hinzufügen", "removeRule": "Regel entfernen", "monthly": "Monatlich", "yearly": "Jährlich",
     "ruleMonth": "Monat", "ruleAmount": "Betrag", "ruleStart": "Ab", "ruleEnd": "Bis", "ruleEndOpen": "offen",
     "sectionFollowUp": "Nach der Zinsbindung (Schätzung)", "assumedRate": "Angenommener Zins", "keepPayment": "Rate beibehalten",
@@ -68,6 +68,7 @@
     "rebaselineTitle": "Plan neu festlegen?", "rebaselineText": "Der ursprüngliche Plan wird durch die aktuellen Parameter und Regeln ersetzt. Korrekturen bleiben erhalten.",
     "deleteTitle": "„{{name}}“ löschen?", "deleteText": "Du kannst das einige Sekunden lang rückgängig machen."
   },
+  "rateInfo": {"title": "So wird die Rate berechnet", "yourLoan": "Mit Ihren Werten", "roundingBank": "Rundung „Bank“: Die Rate wird auf den Cent gerundet; die letzte Rate gleicht die Rundung aus.", "roundingSpreadsheet": "Rundung „Tabelle“: Es wird ohne Zwischenrundung weitergerechnet, angezeigt wird auf den Cent.", "repayment": {"formula": "Rate = K × (i + t) ÷ 12", "text": "Die Rate bleibt während der Zinsbindung gleich. Im ersten Monat entfallen genau der Sollzins und die anfängliche Tilgung (jeweils ÷ 12) auf die Restschuld. Weil die Restschuld sinkt, wird der Zinsanteil danach jeden Monat kleiner und der Tilgungsanteil größer. Daraus ergibt sich die Laufzeit.", "legend": "K = Darlehensbetrag, i = Sollzins, t = anfängliche Tilgung"}, "term": {"formula": "Rate = K × q ÷ (1 − (1 + q)⁻ⁿ)", "legend": "K = Darlehensbetrag, q = Sollzins ÷ 12 (Monatszins), n = Anzahl der Monatsraten", "q": "q = {{rate}} ÷ 12 = {{q}}", "n": "n = {{n}} Monatsraten", "text": "Das ist die gleichbleibende Rate (Annuität), mit der das Darlehen ohne Sondertilgungen nach genau {{n}} Raten getilgt ist. Sondertilgungen ändern die Rate nicht, sie verkürzen die Laufzeit."}},
   "schedule": {
     "title": "Tilgungsplan", "monthly": "Monatlich", "yearly": "Jährlich", "projection": "Prognose",
     "projections": { "current": "Aktuell", "withoutSpecial": "Ohne Sondertilgungen", "originalPlan": "Ursprünglicher Plan" },

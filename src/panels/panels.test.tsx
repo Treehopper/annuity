@@ -1,5 +1,5 @@
 import { defaultSettings, type Loan } from '@alp/core';
-import { act, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import type { ReactElement } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -101,6 +101,18 @@ describe.each(WIDTHS)('panels at %ipx (§4.12 rule 10)', (width) => {
       expect(screen.queryByText('Zwischen 1.000 € und 10.000.000 €.')).toBeNull();
     } finally {
       await act(() => i18n.changeLanguage('en'));
+      useDraftStore.setState({ drafts: {} });
+    }
+  });
+
+  it('LoanEditPanel explains how the payment is computed, with the loan\'s numbers', async () => {
+    await at(width, <LoanEditPanel loanId="b" onSaved={jest.fn()} onCancel={jest.fn()} />);
+    try {
+      await act(() => fireEvent.press(screen.getByTestId('rate-info-button')));
+      expect(screen.getByText('Payment = P × q ÷ (1 − (1 + q)⁻ⁿ)')).toBeTruthy();
+      expect(screen.getByText('n = 216 monthly payments')).toBeTruthy();
+      expect(screen.getByText('= €1,690.28')).toBeTruthy();
+    } finally {
       useDraftStore.setState({ drafts: {} });
     }
   });
