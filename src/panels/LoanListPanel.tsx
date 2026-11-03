@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, View } from 'react-native';
 
 import { useFormat } from '@/features/format';
+import { specialSummary } from '@/features/outlay';
 import { useOverview } from '@/features/projections';
 import { useAppStore } from '@/store/appStore';
 import { Button, Card, Chip, IconButton, StatusBadge, Text } from '@/ui/components';
@@ -155,7 +156,7 @@ function LoanCard({
   const f = useFormat();
   const { c } = useTheme();
   const { loan, kpis } = item;
-  const special = Number(kpis.monthlyOutlay) - Number(kpis.annuity);
+  const special = specialSummary(kpis, f, t);
   const fe = kpis.atFixedRateEnd;
   const em = (k: SortKey) => sortKey === k;
   return (
@@ -182,8 +183,8 @@ function LoanCard({
           </Text>
         </View>
         <Text bold={em('payment') || em('monthlyOutlay')} style={{ fontVariant: ['tabular-nums'] }}>
-          {special > 0.004
-            ? t('overview.paymentPlusSpecial', { amount: f.money(kpis.annuity), special: f.money(special) })
+          {special
+            ? t('overview.paymentPlusSpecial', { amount: f.money(kpis.annuity), special })
             : t('overview.payment', { amount: f.money(kpis.annuity) })}
         </Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: space.m }}>

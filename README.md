@@ -1087,7 +1087,7 @@ NOTIFY;;9f1c…;true;3;12|6
 | **atFixedRateEnd if paid off earlier** | `balance = 0.00`, `date` = fixed-rate end date, totals = lifetime totals, `payments` = total payments, `paidOffBeforeEnd = true` |
 | **Payoff** | Date of the last row. `isEstimate` if that row is in the follow-up phase |
 | **This month** | The row whose date is in today's calendar month (`kind: 'current'`). Before the first payment: the first row (`kind: 'first'`, card title "First payment"). After payoff: no card; the detail shows "Paid off MM/YYYY" instead. Shown for active loans only |
-| **Monthly outlay** | $A + \sum_{\rho\ \text{monthly}} \text{amount}_\rho + \sum_{\rho\ \text{yearly}} \frac{\text{amount}_\rho}{12}$ over the rules active on the reference date, rounded to the cent. Reference date: this month's row date for active loans, `firstPaymentDate` otherwise. Overrides are ignored (they are one-offs) |
+| **Monthly outlay** | $A + \sum_{\rho\ \text{monthly}} \text{amount}_\rho + \sum_{\rho\ \text{yearly}} \frac{\text{amount}_\rho}{12}$ over the rules active on the reference date, rounded to the cent. Reference date: this month's row date for active loans, `firstPaymentDate` otherwise. Overrides are ignored (they are one-offs). An average, so the UI labels it "Avg. monthly outlay" / "Ø Monatsbelastung" and shows the breakdown (payment, monthly specials, yearly specials with their month) |
 | **Best value in Compare** | Lowest value per row; payoff by earliest date. Fixed period is not ranked. Ties get a ★ each |
 
 ### 5.11 Loan lifecycle

@@ -14,11 +14,11 @@
     "filters": { "all": "Alle", "offer": "Angebote", "active": "Aktiv", "closed": "Abgeschlossen" },
     "sortKeys": {
       "rate": "Niedrigster Sollzins", "payoffDate": "Früheste Tilgung", "totalInterest": "Geringste Zinsen gesamt",
-      "balanceAtFixedEnd": "Geringste Restschuld nach Zinsbindung", "payment": "Niedrigste Rate", "monthlyOutlay": "Geringste Monatsbelastung"
+      "balanceAtFixedEnd": "Geringste Restschuld nach Zinsbindung", "payment": "Niedrigste Rate", "monthlyOutlay": "Geringste Ø Monatsbelastung"
     },
     "payment": "Rate {{amount}}", "paymentPlusSpecial": "Rate {{amount}} + {{special}}",
     "fixedEnd": "Zinsbindungsende {{date}}:", "paidOff": "Getilgt {{date}}", "paidOffEst": "Getilgt {{date}} (Schätzung)",
-    "totalInterest": "Zinsen gesamt {{amount}}", "outlay": "Monatsbelastung {{amount}}",
+    "totalInterest": "Zinsen gesamt {{amount}}", "outlay": "Ø Monatsbelastung {{amount}}", "perYear": "{{amount}}/Jahr",
     "emptyTitle": "Plane dein erstes Darlehen", "emptyText": "Gib ein Angebot ein und sieh den Tilgungsplan, die Restschuld nach der Zinsbindung und das Tilgungsende.",
     "create": "Darlehen anlegen", "noneForFilter": "Keine Darlehen für diesen Filter.", "selectHint": "Wähle ein Darlehen, um die Details zu sehen.",
     "deleted": "„{{name}}“ gelöscht", "duplicate": "Duplizieren"
@@ -54,7 +54,7 @@
     "vsPlan": "vs. ursprünglicher Plan", "deltaPayoff": "Tilgungsende", "deltaInterest": "Zinsen", "deltaBalance": "Restschuld nach Zinsbindung",
     "balanceChart": "Restschuld", "schedule": "Tilgungsplan", "toConfirm_one": "{{count}} Sondertilgung zu bestätigen", "toConfirm_other": "{{count}} Sondertilgungen zu bestätigen",
     "paidOffBanner": "Dieses Darlehen wurde am {{date}} getilgt.", "markClosed": "Als abgeschlossen markieren", "paidOff": "Getilgt {{date}}",
-    "keyFigures": "Kennzahlen", "annuity": "Monatliche Rate", "outlay": "Monatsbelastung", "equivRepayment": "Anfängliche Tilgung"
+    "keyFigures": "Kennzahlen", "annuity": "Monatliche Rate", "outlay": "Ø Monatsbelastung", "outlayRate": "{{amount}} Rate", "outlayMonthly": "{{amount}} monatlich", "outlayYearly": "{{amount}} jährlich im {{month}}", "equivRepayment": "Anfängliche Tilgung"
   },
   "menu": {
     "newLoan": "Neues Darlehen…", "edit": "Bearbeiten", "duplicate": "Duplizieren", "activate": "Als aktiv markieren", "revert": "Zurück zum Angebot",

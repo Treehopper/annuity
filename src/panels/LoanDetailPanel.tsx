@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { useFormat, type Formatter } from '@/features/format';
+import { outlayBreakdown as describeOutlay } from '@/features/outlay';
 import { useLoan, useProjection, useToday } from '@/features/projections';
 import { useAppStore } from '@/store/appStore';
 import { Banner, Button, Card, Icon, SectionTitle, Text, ValueRow } from '@/ui/components';
@@ -40,6 +41,7 @@ export function LoanDetailPanel({ loanId, menu, onOpenSchedule }: LoanDetailPane
 
   if (!loan || !current) return <Text style={{ padding: space.l }}>{t('err.loan.notFound')}</Text>;
   const k = current.kpis;
+  const outlayBreakdown = describeOutlay(k, f, t);
   const running = loan.status !== 'offer';
   const paidOff = k.payoff.date < today && k.payoff.payments > 0;
   const twoCol = width >= 720;
@@ -97,6 +99,11 @@ export function LoanDetailPanel({ loanId, menu, onOpenSchedule }: LoanDetailPane
       <Card>
         <ValueRow label={t('detail.annuity')} value={f.money(k.annuity)} emphasis />
         <ValueRow label={t('detail.outlay')} value={f.money(k.monthlyOutlay)} />
+        {outlayBreakdown ? (
+          <Text variant="small" style={{ textAlign: 'right', marginTop: -space.xs }} testID="outlay-breakdown">
+            {outlayBreakdown}
+          </Text>
+        ) : null}
         <ValueRow label={t('detail.equivRepayment')} value={f.percent(k.initialRepaymentRate)} />
         <ValueRow label={t('edit.rate')} value={f.percent(loan.params.nominalRate)} />
         <ValueRow label={t('edit.principal')} value={f.money(loan.params.principal)} />

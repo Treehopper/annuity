@@ -14,11 +14,11 @@
     "filters": { "all": "All", "offer": "Offers", "active": "Active", "closed": "Closed" },
     "sortKeys": {
       "rate": "Lowest interest rate", "payoffDate": "Earliest payoff", "totalInterest": "Lowest total interest",
-      "balanceAtFixedEnd": "Lowest balance at fixed-rate end", "payment": "Lowest payment", "monthlyOutlay": "Lowest monthly outlay"
+      "balanceAtFixedEnd": "Lowest balance at fixed-rate end", "payment": "Lowest payment", "monthlyOutlay": "Lowest avg. monthly outlay"
     },
     "payment": "Payment {{amount}}", "paymentPlusSpecial": "Payment {{amount}} + {{special}}",
     "fixedEnd": "Fixed-rate end {{date}}:", "paidOff": "Paid off {{date}}", "paidOffEst": "Paid off {{date}} (est.)",
-    "totalInterest": "Total interest {{amount}}", "outlay": "Monthly outlay {{amount}}",
+    "totalInterest": "Total interest {{amount}}", "outlay": "Avg. monthly outlay {{amount}}", "perYear": "{{amount}}/yr",
     "emptyTitle": "Plan your first loan", "emptyText": "Enter an offer to see its schedule, the balance at the end of the fixed-rate period and the payoff date.",
     "create": "Create loan", "noneForFilter": "No loans match this filter.", "selectHint": "Select a loan to see its details.",
     "deleted": "“{{name}}” deleted", "duplicate": "Duplicate"
@@ -54,7 +54,7 @@
     "vsPlan": "vs. original plan", "deltaPayoff": "Payoff", "deltaInterest": "Interest", "deltaBalance": "Balance at fixed-rate end",
     "balanceChart": "Balance", "schedule": "Schedule", "toConfirm_one": "{{count}} special repayment to confirm", "toConfirm_other": "{{count}} special repayments to confirm",
     "paidOffBanner": "This loan was paid off on {{date}}.", "markClosed": "Mark as closed", "paidOff": "Paid off {{date}}",
-    "keyFigures": "Key figures", "annuity": "Monthly payment", "outlay": "Monthly outlay", "equivRepayment": "Initial repayment"
+    "keyFigures": "Key figures", "annuity": "Monthly payment", "outlay": "Avg. monthly outlay", "outlayRate": "{{amount}} payment", "outlayMonthly": "{{amount}} monthly", "outlayYearly": "{{amount}} yearly in {{month}}", "equivRepayment": "Initial repayment"
   },
   "menu": {
     "newLoan": "New loan…", "edit": "Edit", "duplicate": "Duplicate", "activate": "Mark as active", "revert": "Revert to offer",

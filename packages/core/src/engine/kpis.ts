@@ -1,4 +1,4 @@
-import { dec, toMoney, toRate, ZERO } from '../model/decimal';
+import { dec, toMoney, toRate, ZERO, type Decimal } from '../model/decimal';
 import { addMonths, yearMonth } from '../model/dates';
 import type { ISODate, Loan, LoanKpis, ScheduleRow } from '../model/types';
 import { annuityDecimal, equivalentInitialRepayment } from './annuity';
@@ -24,15 +24,35 @@ export function thisMonthOf(
   return undefined;
 }
 
-/** Monthly outlay = A + monthly rules + yearly rules / 12, active on the reference date (§5.10). */
+/** Special repayment rules active on the reference date (§5.10). */
+function activeRules(loan: Loan, referenceDate: ISODate) {
+  return loan.specialRules.filter((r) => r.start <= referenceDate && !(r.end && referenceDate > r.end));
+}
+
+/**
+ * Monthly outlay = A + monthly rules + yearly rules / 12, active on the reference date (§5.10).
+ * An average: with yearly rules, no single month is debited this amount ({@link outlayParts}).
+ */
 export function monthlyOutlay(loan: Loan, referenceDate: ISODate) {
   let sum = annuityDecimal(loan.params);
-  for (const r of loan.specialRules) {
-    if (r.start > referenceDate) continue;
-    if (r.end && referenceDate > r.end) continue;
+  for (const r of activeRules(loan, referenceDate)) {
     sum = r.frequency === 'monthly' ? sum.plus(dec(r.amount)) : sum.plus(dec(r.amount).div(12));
   }
   return toMoney(sum);
+}
+
+/** What the monthly outlay is made of: monthly specials, and yearly specials by month (sorted). */
+export function outlayParts(loan: Loan, referenceDate: ISODate): LoanKpis['outlayParts'] {
+  let monthlySpecial = ZERO;
+  const yearly = new Map<number, Decimal>();
+  for (const r of activeRules(loan, referenceDate)) {
+    if (r.frequency === 'monthly') monthlySpecial = monthlySpecial.plus(dec(r.amount));
+    else if (r.month !== undefined) yearly.set(r.month, (yearly.get(r.month) ?? ZERO).plus(dec(r.amount)));
+  }
+  return {
+    monthlySpecial: toMoney(monthlySpecial),
+    yearlySpecials: [...yearly.entries()].sort(([a], [b]) => a - b).map(([month, amount]) => ({ month, amount: toMoney(amount) })),
+  };
 }
 
 export function computeKpis(loan: Loan, schedule: readonly ScheduleRow[], today: ISODate): LoanKpis {
@@ -66,6 +86,7 @@ export function computeKpis(loan: Loan, schedule: readonly ScheduleRow[], today:
     annuity: toMoney(annuityDecimal(loan.params)),
     initialRepaymentRate: toRate(equivalentInitialRepayment(loan.params)),
     monthlyOutlay: monthlyOutlay(loan, refDate),
+    outlayParts: outlayParts(loan, refDate),
     atFixedRateEnd: {
       date: fixedRateEndDate(loan),
       balance: paidOffBeforeEnd || !fixedRow ? '0.00' : toMoney(fixedRow.closing),

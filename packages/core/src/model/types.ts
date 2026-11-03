@@ -158,7 +158,10 @@ export interface ScheduleRow {
 export interface LoanKpis {
   annuity: Money;
   initialRepaymentRate: Rate;
+  /** Average per month: yearly special repayments count 1/12 (§5.10). */
   monthlyOutlay: Money;
+  /** Breakdown of {@link monthlyOutlay} besides the annuity. */
+  outlayParts: { monthlySpecial: Money; yearlySpecials: { month: number; amount: Money }[] };
   atFixedRateEnd: {
     date: ISODate;
     balance: Money;

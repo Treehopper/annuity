@@ -1,8 +1,8 @@
 import { yearMonth, type ScheduleRow, type YearRow } from '@alp/core';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { useFormat, type Formatter } from '@/features/format';
 import { project, useLoan, useToday, yearlyOf, type Projection } from '@/features/projections';
@@ -110,18 +110,16 @@ export function SchedulePanel({ loanId, granularity, projection, date, onChangeV
             { value: 'yearly', label: t('schedule.yearly') },
           ]}
         />
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.s, alignItems: 'center' }}>
-          <Text variant="muted">{t('schedule.projection')}:</Text>
+        <ChipRow label={t('schedule.projection')}>
           {projections.map((p) => (
             <Chip key={p} label={t(`schedule.projections.${p}`)} selected={effectiveProjection === p} onPress={() => onChangeView({ projection: p })} testID={`projection-${p}`} />
           ))}
-        </View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.xs, alignItems: 'center' }}>
-          <Text variant="muted">{t('schedule.jump')}:</Text>
-          {running ? <Button compact kind="ghost" label={t('schedule.jumpToday')} onPress={() => jump('today')} testID="jump-today" /> : null}
-          <Button compact kind="ghost" label={t('schedule.jumpFixedEnd')} onPress={() => jump('fixedEnd')} testID="jump-fixed" />
-          <Button compact kind="ghost" label={t('schedule.jumpPayoff')} onPress={() => jump('payoff')} testID="jump-payoff" />
-        </View>
+        </ChipRow>
+        <ChipRow label={t('schedule.jump')}>
+          {running ? <Chip label={t('schedule.jumpToday')} onPress={() => jump('today')} testID="jump-today" /> : null}
+          <Chip label={t('schedule.jumpFixedEnd')} onPress={() => jump('fixedEnd')} testID="jump-fixed" />
+          <Chip label={t('schedule.jumpPayoff')} onPress={() => jump('payoff')} testID="jump-payoff" />
+        </ChipRow>
         <HeaderRow wide={wide} yearly={granularity === 'yearly'} />
       </View>
       <FlashList
@@ -149,6 +147,20 @@ export function SchedulePanel({ loanId, granularity, projection, date, onChangeV
   );
 }
 
+/** Fixed label plus one line of chips that scrolls sideways instead of wrapping on narrow screens. */
+function ChipRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.s }}>
+      <Text variant="muted" numberOfLines={1}>
+        {label}:
+      </Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ gap: space.s, alignItems: 'center' }}>
+        {children}
+      </ScrollView>
+    </View>
+  );
+}
+
 function statusMark(row: ScheduleRow): string {
   if (row.specialStatus === 'confirmed') return '✓';
   if (row.specialStatus === 'unconfirmed') return '○';
@@ -157,6 +169,8 @@ function statusMark(row: ScheduleRow): string {
 }
 
 const COLS_WIDE = { n: 40, date: 80, money: 1 } as const;
+/** Year column: wide enough for "2034*" in bold italic on a 393 pt phone. */
+const YEAR_FLEX = 0.9;
 
 function HeaderRow({ wide, yearly }: { wide: boolean; yearly: boolean }) {
   const { t } = useTranslation();
@@ -168,7 +182,7 @@ function HeaderRow({ wide, yearly }: { wide: boolean; yearly: boolean }) {
   if (yearly)
     return (
       <View style={{ flexDirection: 'row', gap: space.s }}>
-        {cell(t('schedule.cols.year'), 0.8, 'left')}
+        {cell(t('schedule.cols.year'), YEAR_FLEX, 'left')}
         {wide ? cell(t('schedule.cols.payments'), 0.6) : null}
         {cell(t('schedule.cols.interest'))}
         {cell(t('schedule.cols.principal'))}
@@ -297,25 +311,23 @@ function YearRowView({ row, wide, f }: { row: YearRow; wide: boolean; f: Formatt
     </Text>
   );
   return (
-    <View
-      testID={`year-${row.year}-${row.part}`}
-      style={{ flexDirection: 'row', gap: space.s, paddingHorizontal: space.l, paddingVertical: space.m, borderBottomWidth: 1, borderBottomColor: c.border, alignItems: 'center' }}>
-      <View style={{ flex: 0.8 }}>
-        <Text italic={it} bold style={tabular}>
+    <View testID={`year-${row.year}-${row.part}`} style={{ paddingHorizontal: space.l, paddingVertical: space.m, borderBottomWidth: 1, borderBottomColor: c.border, gap: 2 }}>
+      <View style={{ flexDirection: 'row', gap: space.s, alignItems: 'center' }}>
+        <Text italic={it} bold numberOfLines={1} style={{ flex: YEAR_FLEX, ...tabular }}>
           {row.year}
           {it ? '*' : ''}
         </Text>
-        {row.part !== 'full' ? <Text variant="small">{t(`schedule.phases.${row.part}`)}</Text> : null}
+        {wide ? (
+          <Text variant="amount" style={{ flex: 0.6, fontSize: 14 }}>
+            {row.payments}
+          </Text>
+        ) : null}
+        {num(row.interest)}
+        {num(row.regularPrincipal)}
+        {num(row.special)}
+        {num(row.closing, 1.3, true)}
       </View>
-      {wide ? (
-        <Text variant="amount" style={{ flex: 0.6, fontSize: 14 }}>
-          {row.payments}
-        </Text>
-      ) : null}
-      {num(row.interest)}
-      {num(row.regularPrincipal)}
-      {num(row.special)}
-      {num(row.closing, 1.3, true)}
+      {row.part !== 'full' ? <Text variant="small">{t(`schedule.phases.${row.part}`)}</Text> : null}
     </View>
   );
 }
