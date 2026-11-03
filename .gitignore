@@ -156,3 +156,6 @@ web-build/
 # Playwright
 playwright-report/
 test-results/
+
+# Local scratch files (e.g. reference spreadsheets)
+/tmp/
